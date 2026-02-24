@@ -1,67 +1,71 @@
-// auth.js — demo auth layer (localStorage)
-// Later we can replace this with Supabase/Firebase for real auth + email verification.
+/* auth.js - simple demo auth + subscription flags using localStorage */
 
-const Auth = {
-  userKey: "lotus_auth_user",
-  usersKey: "lotus_auth_users",
+(function () {
+  const USER_KEY = "lotus_user";                 // stores logged-in user
+  const SUB_KEY = "lotus_subscriptions";         // stores subscription by email
 
-  // --- user session ---
-  login({ email }) {
-    localStorage.setItem(this.userKey, JSON.stringify({
-      email,
-      loginTime: new Date().toISOString()
-    }));
-  },
-
-  logout() {
-    localStorage.removeItem(this.userKey);
-  },
-
-  getUser() {
-    const raw = localStorage.getItem(this.userKey);
-    return raw ? JSON.parse(raw) : null;
-  },
-
-  isLoggedIn() {
-    return !!this.getUser();
-  },
-
-  requireAuth() {
-    if (!this.isLoggedIn()) {
-      window.location.href = "login.html";
+  function readJSON(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
     }
-  },
-
-  // --- demo user database ---
-  _loadUsers() {
-    const raw = localStorage.getItem(this.usersKey);
-    return raw ? JSON.parse(raw) : [];
-  },
-
-  _saveUsers(users) {
-    localStorage.setItem(this.usersKey, JSON.stringify(users));
-  },
-
-  register({ name, email, password }) {
-    const users = this._loadUsers();
-    const exists = users.some(u => u.email === email);
-    if (exists) return false;
-
-    users.push({
-      name,
-      email,
-      // NOTE: This is demo only — never store raw passwords in real apps.
-      password,
-      createdAt: new Date().toISOString()
-    });
-
-    this._saveUsers(users);
-    return true;
-  },
-
-  authenticate({ email, password }) {
-    const users = this._loadUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-    return user || null;
   }
-};
+
+  function writeJSON(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  const Auth = {
+    // ---- Auth ----
+    isLoggedIn: function () {
+      const user = readJSON(USER_KEY, null);
+      return !!(user && user.email);
+    },
+
+    getUser: function () {
+      return readJSON(USER_KEY, null);
+    },
+
+    login: function (user) {
+      // expects at least { email }
+      if (!user || !user.email) return;
+      writeJSON(USER_KEY, {
+        email: String(user.email).toLowerCase(),
+        name: user.name || "",
+        loginAt: new Date().toISOString()
+      });
+    },
+
+    logout: function () {
+      localStorage.removeItem(USER_KEY);
+    },
+
+    // ---- Subscription (demo) ----
+    isSubscribed: function () {
+      const user = readJSON(USER_KEY, null);
+      if (!user || !user.email) return false;
+
+      const subs = readJSON(SUB_KEY, {});
+      const record = subs[user.email];
+      return !!(record && record.active === true);
+    },
+
+    setSubscribed: function (active, planName) {
+      const user = readJSON(USER_KEY, null);
+      if (!user || !user.email) return;
+
+      const subs = readJSON(SUB_KEY, {});
+      subs[user.email] = {
+        active: !!active,
+        planName: planName || "All Access Monthly",
+        updatedAt: new Date().toISOString()
+      };
+      writeJSON(SUB_KEY, subs);
+    }
+  };
+
+  // Make it available globally
+  window.Auth = Auth;
+})();
