@@ -12,9 +12,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
-    /* ===============================
-       Manrope Font
-    =============================== */
     @font-face {
       font-family: 'Manrope';
       src: url('fonts/Manrope-Regular.ttf') format('truetype');
@@ -27,9 +24,6 @@
       background-color: #f6f2ee;
     }
 
-    /* ===============================
-       Navbar
-    =============================== */
     .lotus-navbar {
       background-color: #4d0012;
       padding-top: 1.75rem;
@@ -51,17 +45,11 @@
       letter-spacing: 0.04em;
     }
 
-    /* ===============================
-       Card styling
-    =============================== */
     .auth-card {
       border: none;
       border-radius: 1rem;
     }
 
-    /* ===============================
-       Buttons
-    =============================== */
     .btn-primary {
       background-color: #b89056;
       border-color: #b89056;
@@ -86,9 +74,13 @@
       color: #4d0012;
     }
 
-    /* Links */
-    a { color: #b89056; }
-    a:hover { color: #ffd9a2; }
+    a {
+      color: #b89056;
+    }
+
+    a:hover {
+      color: #ffd9a2;
+    }
   </style>
 </head>
 
@@ -101,7 +93,7 @@
 
       <div class="ms-auto d-flex align-items-center gap-3">
         <a class="nav-link" href="index.html">Home</a>
-        <button id="logoutBtn" class="btn btn-outline-primary btn-sm">
+        <button id="logoutBtn" type="button" class="btn btn-outline-primary btn-sm">
           Logout
         </button>
       </div>
@@ -124,7 +116,7 @@
                 <div class="p-3 bg-white border rounded-4 h-100">
                   <h2 class="h6 mb-2">Bookings</h2>
                   <p class="text-secondary small mb-3">View or cancel upcoming classes.</p>
-                  <a class="btn btn-primary w-100" href="#">View bookings</a>
+                  <a class="btn btn-primary w-100" href="schedule.html">View bookings</a>
                 </div>
               </div>
 
@@ -132,7 +124,7 @@
                 <div class="p-3 bg-white border rounded-4 h-100">
                   <h2 class="h6 mb-2">Subscription</h2>
                   <p class="text-secondary small mb-3">Manage your on-demand access.</p>
-                  <a class="btn btn-primary w-100" href="#">Manage plan</a>
+                  <a class="btn btn-primary w-100" href="subscribe.html">Manage plan</a>
                 </div>
               </div>
 
@@ -140,13 +132,13 @@
                 <div class="p-3 bg-white border rounded-4 h-100">
                   <h2 class="h6 mb-2">Profile</h2>
                   <p class="text-secondary small mb-3">Update your account details.</p>
-                  <a class="btn btn-primary w-100" href="#">Edit profile</a>
+                  <a class="btn btn-primary w-100" href="profile.html">Edit profile</a>
                 </div>
               </div>
             </div>
 
             <hr class="my-4">
-            </p>
+
           </div>
         </div>
       </div>
@@ -157,7 +149,9 @@
   <script src="auth.js"></script>
   <script>
     // Protect page
-    Auth.requireAuth();
+    if (!Auth.isLoggedIn()) {
+      window.location.href = "login.html?returnTo=dashboard.html";
+    }
 
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {

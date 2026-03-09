@@ -56,6 +56,18 @@
       color: #4d0012;
     }
 
+    .btn-lotus-outline {
+      border: 1px solid #4d0012;
+      color: #4d0012;
+      background: transparent;
+      font-weight: 600;
+    }
+
+    .btn-lotus-outline:hover {
+      background: #4d0012;
+      color: white;
+    }
+
     /* Cards */
     .card-soft {
       border: none;
@@ -63,16 +75,68 @@
       overflow: hidden;
     }
 
-    .thumb {
-      height: 180px;
-      background: rgba(77, 0, 18, 0.15);
+    /* Video library access lock */
+    .video-library-wrapper {
+      position: relative;
+      min-height: 650px;
+    }
+
+    .video-library-content.locked {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .video-library-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: rgba(77, 0, 18, 0.7);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      font-size: 0.9rem;
+      padding: 2rem;
+      background: rgba(77, 0, 18, 0.18);
+      backdrop-filter: blur(2px);
+      border-radius: 1.25rem;
+    }
+
+    .video-library-overlay.hidden {
+      display: none;
+    }
+
+    .video-overlay-card {
+      max-width: 560px;
+      width: 100%;
+      background: rgba(255, 248, 242, 0.95);
+      border: 1px solid #b89056;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(77, 0, 18, 0.15);
+    }
+
+    .video-overlay-card h2 {
+      color: #4d0012;
+      margin-bottom: 1rem;
+    }
+
+    .video-overlay-card p {
+      color: #6d5b5d;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 991px) {
+      .navbar-brand.position-absolute {
+        position: static !important;
+        transform: none !important;
+        margin: 0 auto;
+      }
+
+      .lotus-navbar .container {
+        flex-direction: column;
+        gap: 1rem;
+      }
     }
   </style>
 </head>
@@ -102,97 +166,169 @@
       </a>
 
       <!-- Right Profile Icon -->
-      <div class="ms-auto d-flex align-items-center">
-        <a href="login.html" class="nav-link" title="Login / Profile">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-            class="bi bi-person-circle" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-            <path fill-rule="evenodd"
-              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-          </svg>
-        </a>
-      </div>
-
+<!-- Right Profile Icon -->
+<div class="ms-auto d-flex align-items-center">
+  <a id="profileLink" href="login.html?returnTo=videos.html" class="nav-link" title="Login / Profile">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+      class="bi bi-person-circle" viewBox="0 0 16 16">
+      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+      <path fill-rule="evenodd"
+        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+    </svg>
+  </a>
+</div>   
     </div>
   </nav>
 
   <!-- Main -->
   <main class="container py-5">
+    <div class="video-library-wrapper">
 
-    <div class="mb-4">
-      <h1 class="h3 mb-1">Video Library</h1>
-      <p class="text-secondary mb-0">
-        Browse and play on-demand yoga sessions.
-      </p>
+      <!-- Overlay -->
+      <div id="videoLibraryOverlay" class="video-library-overlay">
+        <div id="videoOverlayCard" class="video-overlay-card">
+          <h2>Unlock the Video Library</h2>
+          <p>
+            Subscribe to access our on-demand yoga and wellness sessions.
+            Enjoy guided practices designed to help you reconnect, restore, and move at your own pace.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="subscribe.html" class="btn btn-primary px-4">Subscribe Now</a>
+            <a href="login.html?returnTo=videos.html" class="btn btn-lotus-outline px-4">Login</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div id="videoLibraryContent" class="video-library-content locked">
+        <div class="mb-4">
+          <h1 class="h3 mb-1">Video Library</h1>
+          <p class="text-secondary mb-0">
+            Browse and play on-demand yoga sessions.
+          </p>
+        </div>
+
+        <div class="row g-4" id="videoGrid"></div>
+      </div>
+
     </div>
-
-    <div class="row g-4" id="videoGrid"></div>
-
   </main>
 
-  <!-- Video Grid Script -->
+  <!-- Auth -->
+  <script src="auth.js"></script>
+
+  <!-- Video Grid + Access Script -->
   <script>
     const demoVideos = [
-     {
-    title: "Deep Stretch • Hips + Hamstrings",
-    level: "All Levels",
-    length: "35 min",
-    image: "Yoga7.jpg"
-  },
-  {
-    title: "Hatha Vinyasa • Slow Flow",
-    level: "Beginner–Intermediate",
-    length: "45 min",
-    image: "Yoga7.jpg"
-  },
-  {
-    title: "Universal Yoga • Strength + Breath",
-    level: "All Levels",
-    length: "50 min",
-    image: "Yoga7.jpg"
-  },
-  {
-    title: "Nervous System Reset • Calm",
-    level: "All Levels",
-    length: "20 min",
-    image: "Yoga7.jpg"
-  },
-  {
-    title: "Core + Balance",
-    level: "Intermediate",
-    length: "30 min",
-    image: "Yoga7.jpg"
-  },
-  {
-    title: "Evening Wind Down",
-    level: "All Levels",
-    length: "25 min",
-    image: "Yoga7.jpg"
-  }
+      {
+        title: "Deep Stretch • Hips + Hamstrings",
+        level: "All Levels",
+        length: "35 min",
+        image: "images/Yoga7.jpg"
+      },
+      {
+        title: "Hatha Vinyasa • Slow Flow",
+        level: "Beginner–Intermediate",
+        length: "45 min",
+        image: "images/Yoga7.jpg"
+      },
+      {
+        title: "Universal Yoga • Strength + Breath",
+        level: "All Levels",
+        length: "50 min",
+        image: "images/Yoga7.jpg"
+      },
+      {
+        title: "Nervous System Reset • Calm",
+        level: "All Levels",
+        length: "20 min",
+        image: "images/Yoga7.jpg"
+      },
+      {
+        title: "Core + Balance",
+        level: "Intermediate",
+        length: "30 min",
+        image: "images/Yoga7.jpg"
+      },
+      {
+        title: "Evening Wind Down",
+        level: "All Levels",
+        length: "25 min",
+        image: "images/Yoga7.jpg"
+      }
     ];
 
     const grid = document.getElementById("videoGrid");
 
     grid.innerHTML = demoVideos.map((video, index) => `
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card shadow-sm card-soft h-100">
-          <img src="${video.image}" 
-     alt="${video.title}" 
-     class="w-100" 
-     style="height: 180px; object-fit: cover;">
-          <div class="card-body p-4">
-            <div class="fw-semibold mb-1">${video.title}</div>
-            <div class="text-secondary small mb-3">
-              ${video.level} • ${video.length}
-            </div>
-            <button class="btn btn-primary w-100"
-              onclick="alert('Video playback integration coming in next sprint.')">
-              Play
-            </button>
-          </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm card-soft h-100">
+      <img
+        src="${video.image}"
+        alt="${video.title}"
+        class="w-100"
+        style="height: 180px; object-fit: cover;"
+      >
+      <div class="card-body p-4">
+        <div class="fw-semibold mb-1">${video.title}</div>
+        <div class="text-secondary small mb-3">
+          ${video.level} • ${video.length}
         </div>
+        <a href="watch.html?video=${index}" class="btn btn-primary w-100">
+          Play
+        </a>
       </div>
-    `).join("");
+    </div>
+  </div>
+`).join("");
+
+    const overlay = document.getElementById("videoLibraryOverlay");
+    const overlayCard = document.getElementById("videoOverlayCard");
+    const content = document.getElementById("videoLibraryContent");
+
+    const isLoggedIn = Auth.isLoggedIn();
+    const hasVideoSubscription = Auth.isSubscribed();
+
+    if (isLoggedIn && hasVideoSubscription) {
+      overlay.classList.add("hidden");
+      content.classList.remove("locked");
+    } else if (!isLoggedIn) {
+      content.classList.add("locked");
+      overlay.classList.remove("hidden");
+
+      overlayCard.innerHTML = `
+        <h2>Login Required</h2>
+        <p>
+          Please log in to view subscription options and access the Lotus Spirit video library.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="login.html?returnTo=videos.html" class="btn btn-primary px-4">Login</a>
+          <a href="signup.html" class="btn btn-lotus-outline px-4">Create Account</a>
+        </div>
+      `;
+    } else {
+      content.classList.add("locked");
+      overlay.classList.remove("hidden");
+
+      overlayCard.innerHTML = `
+        <h2>Subscribe to Watch</h2>
+        <p>
+          You are logged in, but this content is part of our video library membership.
+          Subscribe to unlock full access to all on-demand classes and wellness videos.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="subscribe.html" class="btn btn-primary px-4">Subscribe Now</a>
+        </div>
+      `;
+    }
+
+const profileLink = document.getElementById("profileLink");
+
+if (Auth.isLoggedIn()) {
+  profileLink.href = "dashboard.html";
+} else {
+  profileLink.href = "login.html?returnTo=videos.html";
+}
   </script>
 
 </body>

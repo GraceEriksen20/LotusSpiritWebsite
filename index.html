@@ -8,13 +8,7 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
   <style>
-    /* ===============================
-       Manrope Font
-    =============================== */
     @font-face {
       font-family: 'Manrope';
       src: url('fonts/Manrope-Regular.ttf') format('truetype');
@@ -24,110 +18,446 @@
 
     body {
       font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background-color: #f8f3ee;
+      color: #3e2a2f;
     }
 
-    /* ===============================
-       Navbar Styling
-    =============================== */
+    :root {
+      --lotus-burgundy: #4d0012;
+      --lotus-gold: #b89056;
+      --lotus-light-gold: #d8bc8c;
+      --lotus-cream: #f8f3ee;
+      --lotus-soft: #efe4db;
+      --lotus-text: #3e2a2f;
+    }
+
+    /* Navbar */
     .lotus-navbar {
-      background-color: #4d0012;
+      background-color: rgba(77, 0, 18, 0.96);
       padding-top: 2rem;
       padding-bottom: 2rem;
     }
 
-    @media (min-width: 992px) {
-      .lotus-navbar {
-        padding-top: 2.25rem;
-        padding-bottom: 2.25rem;
-      }
-    }
-
     .lotus-navbar .nav-link {
-      color: #b89056;
+      color: var(--lotus-gold);
       font-weight: 500;
+      transition: color 0.2s ease;
     }
 
     .lotus-navbar .nav-link:hover {
-      color: #ffd9a2;
+      color: #f7ddba;
     }
 
     .lotus-navbar svg {
-      color: #b89056;
+      color: var(--lotus-gold);
+      transition: color 0.2s ease;
     }
 
     .lotus-navbar svg:hover {
-      color: #ffd9a2;
+      color: #f7ddba;
     }
 
     .lotus-navbar .navbar-brand img {
       display: block;
     }
+
+    /* Hero */
+    .hero-section {
+      min-height: 85vh;
+      background:
+        linear-gradient(rgba(50, 18, 25, 0.45), rgba(50, 18, 25, 0.45)),
+        url('images/Lotus1.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .hero-subtitle {
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      color: #f0dcc0;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.7rem, 6vw, 5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-text {
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      color: #f8eee8;
+    }
+
+    .btn-lotus {
+      background-color: var(--lotus-gold);
+      border: none;
+      color: white;
+      padding: 0.9rem 1.6rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .btn-lotus:hover {
+      background-color: #a47c45;
+      color: white;
+    }
+
+    .btn-lotus-outline {
+      border: 1.5px solid #f3dec0;
+      color: white;
+      padding: 0.9rem 1.6rem;
+      border-radius: 999px;
+      font-weight: 600;
+      background: transparent;
+    }
+
+    .btn-lotus-outline:hover {
+      background-color: rgba(255,255,255,0.12);
+      color: white;
+    }
+
+    /* General sections */
+    .section-padding {
+      padding: 5rem 0;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+      color: var(--lotus-burgundy);
+    }
+
+    .section-text {
+      font-size: 1.05rem;
+      color: #6b5558;
+      line-height: 1.8;
+    }
+
+    /* Cards */
+    .lotus-card {
+      background: white;
+      border: none;
+      border-radius: 1.5rem;
+      box-shadow: 0 12px 30px rgba(77, 0, 18, 0.08);
+      padding: 2rem;
+      height: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .lotus-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(77, 0, 18, 0.12);
+    }
+
+    .lotus-card h3 {
+      color: var(--lotus-burgundy);
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .lotus-card p {
+      color: #6f5a5d;
+      margin-bottom: 0;
+    }
+
+    .about-image {
+  width: 100%;
+  max-width: 400px;   /* controls size */
+  height: auto;       /* keeps natural vertical rectangle */
+  border-radius: 1.75rem;
+  box-shadow: 0 12px 30px rgba(77, 0, 18, 0.08);
+}
+
+.about-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+    /* Quote section */
+    .testimonial-section {
+      background-color: #fffaf6;
+    }
+
+    .testimonial-box {
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .testimonial-quote {
+      font-size: 1.5rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--lotus-burgundy);
+    }
+
+    .testimonial-name {
+      margin-top: 1rem;
+      color: var(--lotus-gold);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* CTA */
+    .cta-box {
+      background: linear-gradient(135deg, #4d0012, #6d2032);
+      color: white;
+      border-radius: 2rem;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(77, 0, 18, 0.18);
+    }
+
+    .cta-box h2 {
+      font-size: 2.2rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .cta-box p {
+      color: #f5e9dd;
+      max-width: 700px;
+      margin: 0 auto 1.75rem;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--lotus-burgundy);
+      color: #e9d5bc;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    @media (max-width: 991px) {
+      .lotus-navbar .navbar-brand {
+        position: static !important;
+        transform: none !important;
+        margin: 0 auto;
+      }
+
+      .lotus-navbar .container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .lotus-navbar ul {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    .welcome-section {
+  background-color: #102c20;
+  padding: 5rem 0;
+}
+
+.welcome-section .section-title {
+  color: #f3d3de; 
+}
+
+.welcome-section .section-text {
+  color: #f3d3de;
+}
+
+.offerings-section {
+  background-color: #749c8b;
+  padding: 4rem 0;
+}
+
+.offerings-section .section-title {
+  color:  #4d0012;
+}
+
+.offerings-section .section-text {
+  color: #4d0012;
+}
+
+.offerings-section .lotus-card {
+  background-color: transparent;
+  border: 2px solid #b89056;
+}
+
+.offerings-section .lotus-card h3 {
+  color: #4d0012;
+}
+
+.offerings-section .lotus-card p {
+  color: #4d0012;
+}
+
+.offerings-section .lotus-card {
+  background-color: transparent;
+  border: 2px solid #b89056;
+  text-align: center;
+}
   </style>
 </head>
 
-<body class="bg-light">
+<body>
 
- <!-- Navbar -->
-<nav class="navbar navbar-expand-lg lotus-navbar border-bottom">
-  <div class="container position-relative">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg lotus-navbar">
+    <div class="container position-relative">
 
-    <!-- Left: Site links -->
-    <ul class="navbar-nav me-auto d-flex flex-row gap-4 align-items-center">
-      <li class="nav-item">
-        <a class="nav-link" href="index.html">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="schedule.html">Schedule</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="videos.html">Videos</a>
-      </li>
-    </ul>
+      <ul class="navbar-nav me-auto d-flex flex-row gap-4 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
+        <li class="nav-item"><a class="nav-link" href="videos.html">Videos</a></li>
+      </ul>
 
-    <!-- Center: Logo -->
-    <a class="navbar-brand position-absolute top-50 start-50 translate-middle"
-       href="index.html">
-      <img
-        src="Lotus Spirit_Logo_2.3.png"
-        alt="Lotus Spirit Studio Logo"
-        height="90"
-      />
-    </a>
-
-    <!-- Right: Profile / Login -->
-    <div class="ms-auto d-flex align-items-center">
-      <a href="login.html" class="nav-link">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="24"
-             height="24"
-             fill="currentColor"
-             class="bi bi-person-circle"
-             viewBox="0 0 16 16">
-          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-          <path fill-rule="evenodd"
-            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-        </svg>
+      <a class="navbar-brand position-absolute top-50 start-50 translate-middle" href="index.html">
+        <img src="Lotus Spirit_Logo_2.3.png" alt="Lotus Spirit Studio Logo" height="90" />
       </a>
+
+      <div class="ms-auto d-flex align-items-center">
+        <a href="login.html" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="24" height="24" fill="currentColor"
+               class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+            <path fill-rule="evenodd"
+              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+          </svg>
+        </a>
+      </div>
+
     </div>
+  </nav>
 
-  </div>
-</nav>
-
-  <!-- Hero Section -->
-  <main class="container py-5">
-    <div class="p-5 bg-white rounded-4 shadow-sm text-center">
-      <h1 class="display-5 fw-light mb-3">Breathe. Move. Heal.</h1>
-      <p class="lead text-secondary mx-auto" style="max-width: 720px;">
-        A mindful yoga and wellness space offering in-person classes, online programs,
-        and on-demand healing practices.
-      </p>
-
-      <div class="d-flex justify-content-center gap-2 mt-4">
-        <a class="btn btn-primary btn-lg" href="schedule.html">View Class Schedule</a>
-        <a class="btn btn-outline-primary btn-lg" href="login.html">Login</a>
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-subtitle">Lotus Spirit Studio</div>
+        <h1 class="hero-title">A space to reconnect, heal, and grow</h1>
+        <p class="hero-text">
+          Discover yoga, mindfulness, and healing-centered experiences designed to support
+          your body, mind, and spirit in a calm and welcoming environment.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a class="btn btn-lotus btn-lg" href="schedule.html">View Class Schedule</a>
+          <a class="btn btn-lotus-outline btn-lg" href="login.html">Member Login</a>
+        </div>
       </div>
     </div>
-  </main>
+  </section>
+
+  <!-- Welcome / About -->
+  <section class="section-padding welcome-section">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <h2 class="section-title">Welcome to Lotus Spirit</h2>
+          <p class="section-text">
+            Lotus Spirit Studio is a place for intentional movement, self-reflection, and restoration.
+            Through yoga, guided wellness experiences, and healing practices, we create space for people
+            to slow down, reconnect, and feel supported in their journey.
+          </p>
+          <p class="section-text">
+            Our studio is rooted in the belief that growth can be both challenging and beautiful,
+            and that healing begins when we give ourselves room to breathe.
+          </p>
+        </div>
+        <div class="col-lg-6">
+  <div class="about-image-wrapper">
+    <img src="images/Tea2.jpg" class="about-image" alt="Lotus Spirit Tea">
+  </div>
+</div>
+    </div>
+  </section>
+
+  <!-- Offerings -->
+  <section class="section-padding pt-3 offerings-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Explore Our Offerings</h2>
+        <p class="section-text mx-auto" style="max-width: 760px;">
+          From grounding movement to restorative experiences, our offerings are designed
+          to meet you where you are.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="lotus-card">
+            <h3>Yoga Classes</h3>
+            <p>Flow, strengthen, and reconnect through thoughtfully guided classes for all levels.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lotus-card">
+            <h3>Deep Stretch</h3>
+            <p>Release tension, improve mobility, and restore balance with nourishing movement.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lotus-card">
+            <h3>Sound Bath</h3>
+            <p>Immerse yourself in calming sound experiences that encourage rest and renewal.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lotus-card">
+            <h3>On-Demand Videos</h3>
+            <p>Practice anytime with online classes and wellness content available from home.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="section-padding testimonial-section">
+    <div class="container">
+      <div class="testimonial-box">
+        <p class="testimonial-quote">
+          “Lotus Spirit feels like a place where you can exhale. Every class leaves me feeling more grounded,
+          supported, and connected.”
+        </p>
+        <div class="testimonial-name">— Lotus Spirit Client</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Begin Your Practice</h2>
+        <p>
+          Whether you are looking for movement, stillness, or a deeper sense of connection,
+          Lotus Spirit offers a welcoming place to start.
+        </p>
+        <a class="btn btn-lotus btn-lg" href="schedule.html">Book a Class</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-1">Lotus Spirit Studio</p>
+      <p class="mb-0">Yoga • Wellness • Healing</p>
+    </div>
+  </footer>
 
 </body>
 </html>
