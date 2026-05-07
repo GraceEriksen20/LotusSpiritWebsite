@@ -146,31 +146,16 @@
               </div>
 
               <hr class="my-4">
+              <!-- Stripe Payment -->
+<h2 class="h5 mb-2">Payment</h2>
 
-              <!-- Payment (Demo) -->
-              <h2 class="h5 mb-2">Payment</h2>
-              <p class="text-secondary small mb-3">
-                Demo checkout for now. Later we’ll integrate Stripe.
-              </p>
+<p class="text-secondary small mb-3">
+  You’ll be redirected to Stripe to complete your payment securely.
+</p>
 
-              <div class="row g-3">
-                <div class="col-12 col-md-8">
-                  <label class="form-label" for="cardNumber">Card number (demo)</label>
-                  <input class="form-control" id="cardNumber" inputmode="numeric" placeholder="4242 4242 4242 4242" />
-                </div>
-                <div class="col-6 col-md-2">
-                  <label class="form-label" for="exp">Exp</label>
-                  <input class="form-control" id="exp" placeholder="12/34" />
-                </div>
-                <div class="col-6 col-md-2">
-                  <label class="form-label" for="cvc">CVC</label>
-                  <input class="form-control" id="cvc" placeholder="123" />
-                </div>
-              </div>
-
-              <button id="submitBtn" class="btn btn-primary w-100 mt-4" type="submit">
-                Submit Booking & Pay
-              </button>
+<button id="submitBtn" class="btn btn-primary w-100 mt-4" type="submit">
+  Continue to Secure Payment
+</button>
             </form>
 
           </div>
@@ -200,12 +185,9 @@
 
     </div>
   </main>
-
   <script src="auth.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  emailjs.init("baTbImWYAf5yGMUSR");
-</script>
-  <script src="booking.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabaseClient.js"></script>
+<script src="booking.js"></script>
 </body>
 </html>

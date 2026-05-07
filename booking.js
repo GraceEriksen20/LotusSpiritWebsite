@@ -8,26 +8,52 @@
     return;
   }
 
-  const params = new URLSearchParams(window.location.search);
+ const params = new URLSearchParams(window.location.search);
+const classId = params.get("classId");
 
-  const booking = {
-    date: params.get("date") || "",
-    time: params.get("time") || "",
-    service: params.get("service") || "Yoga Class",
-    staff: params.get("staff") || "Staff",
-    location: params.get("location") || "In Studio",
-    price: params.get("price") || "$16",
-    duration: params.get("duration") || ""
+let booking = null;
+
+async function loadSelectedClass() {
+  if (!classId) {
+    document.getElementById("sumDateTime").textContent =
+      "Missing class details. Go back to Schedule and click Book.";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("classes")
+    .select("*")
+    .eq("id", classId)
+    .single();
+
+  if (error) {
+    console.error("Error loading selected class:", error);
+    document.getElementById("sumDateTime").textContent =
+      "Could not load class details.";
+    return;
+  }
+
+  booking = {
+    id: data.id,
+    date: data.class_date,
+    time: data.start_time,
+    service: data.title,
+    staff: "Jessica Eriksen",
+    location: "Southwest Nimbus Avenue",
+    price: `$${(data.price_cents / 100).toFixed(2)}`,
+    priceCents: data.price_cents,
+    duration: `${data.start_time} - ${data.end_time}`
   };
 
-  // Fill summary UI
   document.getElementById("sumService").textContent = booking.service;
-  document.getElementById("sumDateTime").textContent = booking.date && booking.time
-    ? `${booking.date} • ${booking.time}${booking.duration ? " • " + booking.duration : ""}`
-    : "Missing class details (go back to Schedule and click Book).";
+  document.getElementById("sumDateTime").textContent =
+    `${booking.date} • ${booking.time} • ${booking.duration}`;
   document.getElementById("sumStaff").textContent = `Teacher: ${booking.staff}`;
   document.getElementById("sumLocation").textContent = booking.location;
   document.getElementById("sumPrice").textContent = booking.price;
+}
+
+loadSelectedClass();
 
   const form = document.getElementById("bookingForm");
   const alertBox = document.getElementById("bookingAlert");
@@ -83,7 +109,7 @@ async function sendConfirmationEmail(record) {
     e.preventDefault();
 
     // Validate class info
-    if (!booking.date || !booking.time) {
+    if (!booking || !booking.date || !booking.time) {
       showError("Missing class details. Please go back to Schedule and click Book again.");
       return;
     }
@@ -106,42 +132,35 @@ async function sendConfirmationEmail(record) {
       return;
     }
 
-    // Demo payment check (not real)
-    const cardNumber = document.getElementById("cardNumber").value.replace(/\s+/g, "");
-    if (cardNumber && cardNumber.length < 12) {
-      showError("Please enter a valid demo card number, or leave it blank for now.");
-      return;
-    }
+   submitBtn.disabled = true;
+submitBtn.textContent = "Redirecting to payment...";
 
-    // Simulate payment processing
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Processing…";
-
-    setTimeout(() => {
-      const record = {
-        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-        createdAt: new Date().toISOString(),
-        userEmail: (Auth && Auth.getUser && Auth.getUser()?.email) || email,
-        attendee: { firstName, lastName, email, phone, notes },
-        class: booking,
-        payment: {
-          status: "paid-demo",
-          amount: booking.price
-        }
-      };
-
-      saveBooking(record);
-
-      showSuccess("Booking confirmed! (Demo) Your booking has been saved.");
-      submitBtn.textContent = "Booked ✓";
-
-      // Optional: redirect to dashboard after 1.2s
-      setTimeout(() => { // Send confirmation email (does not block booking success)
-sendConfirmationEmail(record)
-  .then(() => console.log("Confirmation email sent"))
-  .catch((err) => console.error("Email failed:", err));
-        window.location.href = "dashboard.html";
-      }, 1200);
-    }, 900);
+fetch("/api/create-checkout-session", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    classId: booking.id,
+    className: booking.service,
+    priceCents: booking.priceCents
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    showError("Could not start Stripe checkout.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Complete Booking";
+  }
+})
+.catch(err => {
+  console.error(err);
+  showError("Payment setup failed.");
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Complete Booking";
+});
   });
 })();
