@@ -273,37 +273,44 @@
     statusMessage.className = "status-message show " + type;
   }
 
-  function activateSubscription() {
+  subscribeBtn.addEventListener("click", async () => {
     if (!Auth.isLoggedIn()) {
       window.location.href = "login.html?returnTo=subscribe.html";
       return;
     }
 
-    window.location.href = "payment.html";
-  }
+    const user = Auth.getUser();
 
-  function cancelSubscription() {
-    Auth.setSubscribed(false, "Video Library");
-    showMessage("Your subscription has been canceled.", "status-warning");
+    subscribeBtn.disabled = true;
+    subscribeBtn.textContent = "Redirecting...";
 
-    subscribeBtn.textContent = "Subscribe Now";
-    subscribeBtn.classList.remove("btn-outline-lotus");
-    subscribeBtn.classList.add("btn-primary");
+    try {
+      const response = await fetch("/api/create-subscription-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: user.email
+        })
+      });
 
-    subscribeBtn.onclick = activateSubscription;
-  }
+      const data = await response.json();
 
-  if (Auth.isLoggedIn() && Auth.isSubscribed()) {
-    showMessage("You already have an active video library subscription.", "status-warning");
-
-    subscribeBtn.textContent = "Cancel Subscription";
-    subscribeBtn.classList.remove("btn-primary");
-    subscribeBtn.classList.add("btn-outline-lotus");
-
-    subscribeBtn.onclick = cancelSubscription;
-  } else {
-    subscribeBtn.onclick = activateSubscription;
-  }
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        showMessage("Could not start subscription checkout.", "status-warning");
+        subscribeBtn.disabled = false;
+        subscribeBtn.textContent = "Subscribe Now";
+      }
+    } catch (error) {
+      console.error(error);
+      showMessage("Something went wrong. Please try again.", "status-warning");
+      subscribeBtn.disabled = false;
+      subscribeBtn.textContent = "Subscribe Now";
+    }
+  });
 </script>
 
 </body>

@@ -3,25 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Dashboard • Lotus Spirit Studio</title>
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
     @font-face {
       font-family: 'Manrope';
       src: url('fonts/Manrope-Regular.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
     }
 
     body {
-      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-      background-color: #f6f2ee;
+      font-family: 'Manrope', system-ui, sans-serif;
+      background: #f6f2ee;
     }
 
     .lotus-navbar {
@@ -40,125 +35,272 @@
       color: #ffd9a2;
     }
 
-    .navbar-brand {
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .auth-card {
+    .dashboard-card {
       border: none;
-      border-radius: 1rem;
+      border-radius: 1.25rem;
+      overflow: hidden;
     }
 
     .btn-primary {
-      background-color: #b89056;
+      background: #b89056;
       border-color: #b89056;
       font-weight: 600;
     }
 
     .btn-primary:hover {
-      background-color: #ffd9a2;
+      background: #ffd9a2;
       border-color: #ffd9a2;
       color: #4d0012;
     }
 
-    .btn-outline-primary {
-      border-color: #b89056;
-      color: #b89056;
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(0,0,0,0.08);
+      height: 100%;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
       font-weight: 600;
+      background: #edf7f1;
+      color: #2f5b3d;
     }
 
-    .btn-outline-primary:hover {
-      background-color: #b89056;
-      border-color: #b89056;
-      color: #4d0012;
-    }
-
-    a {
-      color: #b89056;
-    }
-
-    a:hover {
-      color: #ffd9a2;
+    .muted {
+      color: #6d5b5d;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar lotus-navbar border-bottom">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Lotus Spirit Studio</a>
+<nav class="navbar lotus-navbar border-bottom">
+  <div class="container">
 
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <a class="nav-link" href="index.html">Home</a>
-        <button id="logoutBtn" type="button" class="btn btn-outline-primary btn-sm">
-          Logout
-        </button>
-      </div>
+    <a class="navbar-brand" href="index.html">
+      Lotus Spirit Studio
+    </a>
+
+    <div class="ms-auto d-flex align-items-center gap-3">
+      <a class="nav-link" href="index.html">Home</a>
+
+      <button
+        id="logoutBtn"
+        type="button"
+        class="btn btn-outline-light btn-sm">
+        Logout
+      </button>
     </div>
-  </nav>
 
-  <!-- Dashboard Content -->
-  <main class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-8">
-        <div class="card shadow-sm auth-card">
-          <div class="card-body p-4 p-md-5">
-            <h1 class="h3 mb-2">Welcome back</h1>
-            <p class="text-secondary mb-4">
-              This is your dashboard — manage bookings, subscriptions, and your account.
+  </div>
+</nav>
+
+<main class="container py-5">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-xl-10">
+
+      <div class="card shadow-sm dashboard-card">
+        <div class="card-body p-4 p-md-5">
+
+          <div class="mb-5">
+            <h1 class="h2 mb-2">
+              Welcome back,
+              <span id="userName">Student</span>
+            </h1>
+
+            <p class="muted mb-0">
+              Manage your bookings, subscription, and account information.
             </p>
+          </div>
 
-            <div class="row g-3">
-              <div class="col-12 col-md-4">
-                <div class="p-3 bg-white border rounded-4 h-100">
-                  <h2 class="h6 mb-2">Bookings</h2>
-                  <p class="text-secondary small mb-3">View or cancel upcoming classes.</p>
-                  <a class="btn btn-primary w-100" href="schedule.html">View bookings</a>
-                </div>
-              </div>
+          <div class="row g-4">
 
-              <div class="col-12 col-md-4">
-                <div class="p-3 bg-white border rounded-4 h-100">
-                  <h2 class="h6 mb-2">Subscription</h2>
-                  <p class="text-secondary small mb-3">Manage your on-demand access.</p>
-                  <a class="btn btn-primary w-100" href="subscribe.html">Manage plan</a>
-                </div>
-              </div>
+            <!-- Profile -->
+            <div class="col-12 col-lg-4">
+              <div class="section-card">
 
-              <div class="col-12 col-md-4">
-                <div class="p-3 bg-white border rounded-4 h-100">
-                  <h2 class="h6 mb-2">Profile</h2>
-                  <p class="text-secondary small mb-3">Update your account details.</p>
-                  <a class="btn btn-primary w-100" href="profile.html">Edit profile</a>
+                <h2 class="h5 mb-3">Profile</h2>
+
+                <div class="mb-3">
+                  <div class="small text-secondary">Email</div>
+                  <div id="profileEmail">Loading...</div>
                 </div>
+
+                <div class="mb-3">
+                  <div class="small text-secondary">Membership</div>
+
+                  <div id="membershipStatus">
+                    <span class="status-badge">
+                      Checking...
+                    </span>
+                  </div>
+                </div>
+
               </div>
             </div>
 
-            <hr class="my-4">
+            <!-- Bookings -->
+            <div class="col-12 col-lg-4">
+              <div class="section-card">
+
+                <h2 class="h5 mb-3">Bookings</h2>
+
+                <p class="muted">
+                  View your upcoming and past class reservations.
+                </p>
+
+                <a href="bookings.html" class="btn btn-primary w-100">
+                  View Bookings
+                </a>
+
+              </div>
+            </div>
+
+            <!-- Subscription -->
+            <div class="col-12 col-lg-4">
+              <div class="section-card">
+
+                <h2 class="h5 mb-3">Subscription</h2>
+
+                <p class="muted">
+                  Manage billing, payment methods, and cancellations.
+                </p>
+
+                <button
+                  id="manageSubscriptionBtn"
+                  class="btn btn-primary w-100">
+                  Manage Subscription
+                </button>
+
+              </div>
+            </div>
 
           </div>
+
         </div>
       </div>
-    </div>
-  </main>
 
-  <!-- Auth -->
-  <script src="auth.js"></script>
-  <script>
-    // Protect page
-    if (!Auth.isLoggedIn()) {
-      window.location.href = "login.html?returnTo=dashboard.html";
+    </div>
+  </div>
+
+</main>
+
+<script src="auth.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+
+<script>
+
+if (!Auth.isLoggedIn()) {
+  window.location.href = "login.html?returnTo=dashboard.html";
+}
+
+const user = Auth.getUser();
+
+document.getElementById("userName").textContent =
+  user.name || "Student";
+
+document.getElementById("profileEmail").textContent =
+  user.email;
+
+document.getElementById("logoutBtn")
+  .addEventListener("click", () => {
+    Auth.logout();
+    window.location.href = "index.html";
+  });
+
+async function loadSubscription() {
+
+  const { data, error } = await supabaseClient
+    .from("subscriptions")
+    .select("*")
+    .eq("customer_email", user.email)
+    .maybeSingle();
+
+  const membershipStatus =
+    document.getElementById("membershipStatus");
+
+  if (data && data.status === "active") {
+
+    membershipStatus.innerHTML = `
+      <span class="status-badge">
+        Active Member
+      </span>
+    `;
+
+  } else {
+
+    membershipStatus.innerHTML = `
+      <span class="badge bg-secondary">
+        No Active Subscription
+      </span>
+    `;
+
+  }
+}
+
+async function openBillingPortal() {
+
+  const button =
+    document.getElementById("manageSubscriptionBtn");
+
+  button.disabled = true;
+  button.textContent = "Loading...";
+
+  try {
+
+    const response = await fetch(
+      "/api/create-billing-portal-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: user.email
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.url) {
+
+      window.location.href = data.url;
+
+    } else {
+
+      alert("No active subscription found.");
+
+      button.disabled = false;
+      button.textContent = "Manage Subscription";
     }
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      Auth.logout();
-      window.location.href = "index.html";
-    });
-  </script>
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Could not open billing portal.");
+
+    button.disabled = false;
+    button.textContent = "Manage Subscription";
+  }
+}
+
+document
+  .getElementById("manageSubscriptionBtn")
+  .addEventListener("click", openBillingPortal);
+
+loadSubscription();
+
+</script>
 
 </body>
 </html>

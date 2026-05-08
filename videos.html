@@ -214,10 +214,14 @@
     </div>
   </main>
 
-  <!-- Auth -->
+    <!-- Auth -->
   <script src="auth.js"></script>
 
-  <!-- Video Grid + Access Script -->
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+
+  <!-- Video Grid -->
   <script>
     const demoVideos = [
       {
@@ -261,74 +265,103 @@
     const grid = document.getElementById("videoGrid");
 
     grid.innerHTML = demoVideos.map((video, index) => `
-  <div class="col-12 col-md-6 col-lg-4">
-    <div class="card shadow-sm card-soft h-100">
-      <img
-        src="${video.image}"
-        alt="${video.title}"
-        class="w-100"
-        style="height: 180px; object-fit: cover;"
-      >
-      <div class="card-body p-4">
-        <div class="fw-semibold mb-1">${video.title}</div>
-        <div class="text-secondary small mb-3">
-          ${video.level} • ${video.length}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card shadow-sm card-soft h-100">
+          <img
+            src="${video.image}"
+            alt="${video.title}"
+            class="w-100"
+            style="height: 180px; object-fit: cover;"
+          >
+
+          <div class="card-body p-4">
+            <div class="fw-semibold mb-1">${video.title}</div>
+
+            <div class="text-secondary small mb-3">
+              ${video.level} • ${video.length}
+            </div>
+
+            <a href="watch.html?video=${index}" class="btn btn-primary w-100">
+              Play
+            </a>
+          </div>
         </div>
-        <a href="watch.html?video=${index}" class="btn btn-primary w-100">
-          Play
-        </a>
       </div>
-    </div>
-  </div>
-`).join("");
+    `).join("");
 
-    const overlay = document.getElementById("videoLibraryOverlay");
-    const overlayCard = document.getElementById("videoOverlayCard");
-    const content = document.getElementById("videoLibraryContent");
+    async function checkSubscriptionAccess() {
+      const overlay = document.getElementById("videoLibraryOverlay");
+      const overlayCard = document.getElementById("videoOverlayCard");
+      const content = document.getElementById("videoLibraryContent");
 
-    const isLoggedIn = Auth.isLoggedIn();
-    const hasVideoSubscription = Auth.isSubscribed();
+      const isLoggedIn = Auth.isLoggedIn();
 
-    if (isLoggedIn && hasVideoSubscription) {
-      overlay.classList.add("hidden");
-      content.classList.remove("locked");
-    } else if (!isLoggedIn) {
-      content.classList.add("locked");
-      overlay.classList.remove("hidden");
+      if (!isLoggedIn) {
+        content.classList.add("locked");
+        overlay.classList.remove("hidden");
 
-      overlayCard.innerHTML = `
-        <h2>Login Required</h2>
-        <p>
-          Please log in to view subscription options and access the Lotus Spirit video library.
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <a href="login.html?returnTo=videos.html" class="btn btn-primary px-4">Login</a>
-          <a href="signup.html" class="btn btn-lotus-outline px-4">Create Account</a>
-        </div>
-      `;
-    } else {
-      content.classList.add("locked");
-      overlay.classList.remove("hidden");
+        overlayCard.innerHTML = `
+          <h2>Login Required</h2>
 
-      overlayCard.innerHTML = `
-        <h2>Subscribe to Watch</h2>
-        <p>
-          You are logged in, but this content is part of our video library membership.
-          Subscribe to unlock full access to all on-demand classes and wellness videos.
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <a href="subscribe.html" class="btn btn-primary px-4">Subscribe Now</a>
-        </div>
-      `;
+          <p>
+            Please log in to access the Lotus Spirit video library.
+          </p>
+
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="login.html?returnTo=videos.html" class="btn btn-primary px-4">
+              Login
+            </a>
+
+            <a href="signup.html" class="btn btn-lotus-outline px-4">
+              Create Account
+            </a>
+          </div>
+        `;
+
+        return;
+      }
+
+      const user = Auth.getUser();
+
+      const { data, error } = await supabaseClient
+        .from("subscriptions")
+        .select("*")
+        .eq("customer_email", user.email)
+        .eq("status", "active")
+        .maybeSingle();
+
+      if (data && !error) {
+        overlay.classList.add("hidden");
+        content.classList.remove("locked");
+      } else {
+        content.classList.add("locked");
+        overlay.classList.remove("hidden");
+
+        overlayCard.innerHTML = `
+          <h2>Subscribe to Watch</h2>
+
+          <p>
+            You are logged in, but you do not yet have an active video membership.
+          </p>
+
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="subscribe.html" class="btn btn-primary px-4">
+              Subscribe Now
+            </a>
+          </div>
+        `;
+      }
     }
 
-const profileLink = document.getElementById("profileLink");
+    checkSubscriptionAccess();
 
-if (Auth.isLoggedIn()) {
-  profileLink.href = "dashboard.html";
-} else {
-  profileLink.href = "login.html?returnTo=videos.html";
-}
+    const profileLink = document.getElementById("profileLink");
+
+    if (Auth.isLoggedIn()) {
+      profileLink.href = "dashboard.html";
+    } else {
+      profileLink.href = "login.html?returnTo=videos.html";
+    }
   </script>
 
 </body>

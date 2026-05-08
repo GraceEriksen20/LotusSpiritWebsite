@@ -449,11 +449,14 @@
   }
 
   async function loadClassesFromSupabase() {
-    const { data, error } = await supabaseClient
-      .from("classes")
-      .select("*")
-      .eq("is_active", true)
-      .order("class_date", { ascending: true });
+    const today = toKey(new Date());
+
+const { data, error } = await supabaseClient
+  .from("classes")
+  .select("*")
+  .eq("is_active", true)
+  .gte("class_date", today)
+  .order("class_date", { ascending: true });
 
     if (error) {
       console.error("Error loading classes:", error);
