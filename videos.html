@@ -185,7 +185,7 @@
     <div class="video-library-wrapper">
 
       <!-- Overlay -->
-      <div id="videoLibraryOverlay" class="video-library-overlay">
+      <div id="videoLibraryOverlay" class="video-library-overlay hidden">
         <div id="videoOverlayCard" class="video-overlay-card">
           <h2>Unlock the Video Library</h2>
           <p>
@@ -200,7 +200,7 @@
       </div>
 
       <!-- Content -->
-      <div id="videoLibraryContent" class="video-library-content locked">
+      <div id="videoLibraryContent" class="video-library-content locked" style="visibility: hidden;"></div>
         <div class="mb-4">
           <h1 class="h3 mb-1">Video Library</h1>
           <p class="text-secondary mb-0">
@@ -225,40 +225,46 @@
   <script>
     const demoVideos = [
       {
-        title: "Deep Stretch • Hips + Hamstrings",
-        level: "All Levels",
-        length: "35 min",
-        image: "images/Yoga7.jpg"
-      },
+  title: "Morning Flow",
+  level: "All Levels",
+  length: "1 hr 35min",
+  image: "images/VIdeo1.png",
+  url: "https://www.youtube.com/embed/mCqoybQwzrw"
+},
       {
         title: "Hatha Vinyasa • Slow Flow",
         level: "Beginner–Intermediate",
-        length: "45 min",
-        image: "images/Yoga7.jpg"
+        length: "1 hr 35min",
+        image: "images/video2.png",
+        url: "https://drive.google.com/file/d/11hZSuVh8Bo1Z7mgA_J4Xh3Cmxt6r7y4W/preview"
       },
       {
         title: "Universal Yoga • Strength + Breath",
         level: "All Levels",
-        length: "50 min",
-        image: "images/Yoga7.jpg"
+        length: "1 hr 35min",
+        image: "images/video3.png",
+        url: "https://drive.google.com/file/d/1qHlTYrz-m4yEPIHxlB5cjE0bEplaUwbD/preview"
       },
       {
         title: "Nervous System Reset • Calm",
         level: "All Levels",
-        length: "20 min",
-        image: "images/Yoga7.jpg"
+        length: "1 hr 35min",
+        image: "images/video4.png",
+        url: "https://drive.google.com/file/d/1zBxhA1Hm1waw5Uy9Srgz3vguSQQaMrS-/preview"
       },
       {
         title: "Core + Balance",
         level: "Intermediate",
-        length: "30 min",
-        image: "images/Yoga7.jpg"
+        length: "1 hr 35min",
+        image: "images/video5.png",
+        url: "https://drive.google.com/file/d/1YreXJ0UAzLTC84cF35zncLU8Gc6ysbTe/preview"
       },
       {
         title: "Evening Wind Down",
         level: "All Levels",
-        length: "25 min",
-        image: "images/Yoga7.jpg"
+        length: "1 hr 35min",
+        image: "images/video6.png",
+        url: "https://drive.google.com/file/d/1IkHZXJ8pwt8FZM6uR51Xmyjcnqobfkdb/preview"
       }
     ];
 
@@ -293,6 +299,7 @@
       const overlay = document.getElementById("videoLibraryOverlay");
       const overlayCard = document.getElementById("videoOverlayCard");
       const content = document.getElementById("videoLibraryContent");
+      content.style.visibility = "visible";
 
       const isLoggedIn = Auth.isLoggedIn();
 

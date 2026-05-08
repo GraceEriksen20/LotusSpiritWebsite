@@ -74,9 +74,9 @@ loadSelectedClass();
 
   function saveBooking(record) {
     const key = "lotus_bookings";
-    const existing = JSON.parse(localStorage.getItem(key) || "[]");
+    const existing = JSON.parse(sessionStorage.getItem(key) || "[]");
     existing.push(record);
-    localStorage.setItem(key, JSON.stringify(existing));
+    sessionStorage.setItem(key, JSON.stringify(existing));
   }
 
 async function sendConfirmationEmail(record) {

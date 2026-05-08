@@ -1,4 +1,4 @@
-/* auth.js - simple demo auth + subscription flags using localStorage */
+/* auth.js - simple demo auth + subscription flags using sessionStorage */
 
 (function () {
   const USER_KEY = "lotus_user";                 // stores logged-in user
@@ -6,7 +6,7 @@
 
   function readJSON(key, fallback) {
     try {
-      const raw = localStorage.getItem(key);
+      const raw = sessionStorage.getItem(key);
       return raw ? JSON.parse(raw) : fallback;
     } catch (e) {
       return fallback;
@@ -14,7 +14,7 @@
   }
 
   function writeJSON(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, JSON.stringify(value));
   }
 
   const Auth = {
@@ -39,7 +39,7 @@
     },
 
     logout: function () {
-      localStorage.removeItem(USER_KEY);
+      sessionStorage.removeItem(USER_KEY);
     },
 
     // ---- Subscription (demo) ----
