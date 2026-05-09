@@ -77,6 +77,25 @@
       return true;
     },
 
+    resetPassword: function (email, newPassword) {
+      if (!email || !newPassword) return false;
+
+      email = String(email).toLowerCase();
+
+      const users = readJSON(USERS_KEY, {});
+
+      if (!users[email]) {
+        return false;
+      }
+
+      users[email].password = newPassword;
+      users[email].updatedAt = new Date().toISOString();
+
+      writeJSON(USERS_KEY, users);
+
+      return true;
+    },
+
     logout: function () {
       sessionStorage.removeItem(USER_KEY);
     }

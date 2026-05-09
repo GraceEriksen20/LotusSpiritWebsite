@@ -1,15 +1,21 @@
 // booking.js
-(function () {
-  // Require login (if you want booking to require authentication now)
-  // If you're not ready for that yet, comment this out.
-  if (window.Auth && !Auth.isLoggedIn()) {
-    const returnTo = encodeURIComponent(window.location.href);
-    window.location.href = `login.html?returnTo=${returnTo}`;
-    return;
-  }
+if (window.Auth && !Auth.isLoggedIn()) {
+  sessionStorage.setItem(
+    "lotus_return_to",
+    window.location.pathname + window.location.search
+  );
 
- const params = new URLSearchParams(window.location.search);
-const classId = params.get("classId");
+  window.location.href = "login.html";
+  return;
+}
+
+const params = new URLSearchParams(window.location.search);
+
+let classId = params.get("classId");
+
+if (!classId) {
+  classId = sessionStorage.getItem("lotus_pending_class_id");
+}
 
 let booking = null;
 
@@ -163,4 +169,3 @@ fetch("/api/create-checkout-session", {
   submitBtn.textContent = "Complete Booking";
 });
   });
-})();

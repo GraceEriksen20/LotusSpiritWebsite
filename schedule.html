@@ -584,9 +584,11 @@ const { data, error } = await supabaseClient
           <div>${c.price}</div>
         </div>
 
-        <a class="book-btn" href="booking.html?classId=${c.id}">
-          Book
-        </a>
+        <a class="book-btn"
+   href="booking.html?classId=${c.id}"
+   onclick="sessionStorage.setItem('lotus_pending_class_id', '${c.id}')">
+  Book
+</a>
       </div>
     `).join("");
   }
