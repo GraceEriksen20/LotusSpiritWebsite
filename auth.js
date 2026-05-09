@@ -1,8 +1,8 @@
-/* auth.js - simple demo auth + subscription flags using sessionStorage */
+/* auth.js - simple demo auth using sessionStorage */
 
 (function () {
-  const USER_KEY = "lotus_user";                 // stores logged-in user
-  const SUB_KEY = "lotus_subscriptions";         // stores subscription by email
+  const USER_KEY = "lotus_user";
+  const USERS_KEY = "lotus_registered_users";
 
   function readJSON(key, fallback) {
     try {
@@ -18,7 +18,6 @@
   }
 
   const Auth = {
-    // ---- Auth ----
     isLoggedIn: function () {
       const user = readJSON(USER_KEY, null);
       return !!(user && user.email);
@@ -28,44 +27,60 @@
       return readJSON(USER_KEY, null);
     },
 
-    login: function (user) {
-      // expects at least { email }
-      if (!user || !user.email) return;
+    register: function ({ name, email, password }) {
+      if (!name || !email || !password) return false;
+
+      email = String(email).toLowerCase();
+
+      const users = readJSON(USERS_KEY, {});
+
+      if (users[email]) {
+        return false;
+      }
+
+      users[email] = {
+        name,
+        email,
+        password,
+        createdAt: new Date().toISOString()
+      };
+
+      writeJSON(USERS_KEY, users);
+
+      return true;
+    },
+
+    getRegisteredUser: function (email) {
+      if (!email) return null;
+
+      const users = readJSON(USERS_KEY, {});
+      return users[String(email).toLowerCase()] || null;
+    },
+
+    login: function ({ email, password, name }) {
+      if (!email) return false;
+
+      email = String(email).toLowerCase();
+
+      const registeredUser = this.getRegisteredUser(email);
+
+      if (registeredUser && password && registeredUser.password !== password) {
+        return false;
+      }
+
       writeJSON(USER_KEY, {
-        email: String(user.email).toLowerCase(),
-        name: user.name || "",
+        email,
+        name: name || registeredUser?.name || "",
         loginAt: new Date().toISOString()
       });
+
+      return true;
     },
 
     logout: function () {
       sessionStorage.removeItem(USER_KEY);
-    },
-
-    // ---- Subscription (demo) ----
-    isSubscribed: function () {
-      const user = readJSON(USER_KEY, null);
-      if (!user || !user.email) return false;
-
-      const subs = readJSON(SUB_KEY, {});
-      const record = subs[user.email];
-      return !!(record && record.active === true);
-    },
-
-    setSubscribed: function (active, planName) {
-      const user = readJSON(USER_KEY, null);
-      if (!user || !user.email) return;
-
-      const subs = readJSON(SUB_KEY, {});
-      subs[user.email] = {
-        active: !!active,
-        planName: planName || "All Access Monthly",
-        updatedAt: new Date().toISOString()
-      };
-      writeJSON(SUB_KEY, subs);
     }
   };
 
-  // Make it available globally
   window.Auth = Auth;
 })();

@@ -186,11 +186,15 @@
       return;
     }
 
-    // Demo login: just store user session
-    Auth.login({ email });
+    const ok = Auth.login({ email, password });
 
-    // Send them back to booking/schedule (or dashboard)
-    window.location.href = returnTo;
+if (!ok) {
+  alertBox.textContent = "Invalid email or password.";
+  alertBox.classList.remove("d-none");
+  return;
+}
+
+window.location.href = returnTo;
   });
 </script>
 

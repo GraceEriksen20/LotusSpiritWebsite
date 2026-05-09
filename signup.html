@@ -183,7 +183,7 @@
         return;
       }
 
-      Auth.login({ email });
+      Auth.login({ name, email, password });
       window.location.href = "dashboard.html";
     });
   </script>
