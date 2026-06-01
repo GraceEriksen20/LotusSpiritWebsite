@@ -300,6 +300,24 @@ document
 
 loadSubscription();
 
+function formatTime(timeString) {
+  if (!timeString) return "";
+
+  const [hourStr, minuteStr] = timeString.split(":");
+  let hour = Number(hourStr);
+  const minute = minuteStr || "00";
+
+  const period = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${period}`;
+}
+
+function formatTimeRange(startTime, endTime) {
+  return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+}
+
 </script>
 
 </body>

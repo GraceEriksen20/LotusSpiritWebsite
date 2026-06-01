@@ -209,9 +209,9 @@ async function loadBookings() {
 
   data.forEach(booking => {
 
-    const classDate =
-      new Date(booking.classes?.class_date);
-
+    const classDate = new Date(
+  `${booking.classes?.class_date} ${booking.classes?.start_time}`
+);
     if (classDate >= today) {
       upcoming.push(booking);
     } else {
@@ -238,6 +238,21 @@ async function loadBookings() {
       `;
 }
 
+function formatTime(timeString) {
+  if (!timeString) return "";
+
+  let [hour, minute] = timeString.split(":");
+
+  hour = parseInt(hour, 10);
+
+  const period = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${period}`;
+}
+
 function renderBooking(booking) {
 
   return `
@@ -252,10 +267,10 @@ function renderBooking(booking) {
       </div>
 
       <div class="muted">
-        ${booking.classes?.start_time || ""}
-        -
-        ${booking.classes?.end_time || ""}
-      </div>
+  ${formatTime(booking.classes?.start_time)}
+  -
+  ${formatTime(booking.classes?.end_time)}
+</div>
 
     </div>
   `;
@@ -263,6 +278,23 @@ function renderBooking(booking) {
 
 loadBookings();
 
+function formatTime(timeString) {
+  if (!timeString) return "";
+
+  const [hourStr, minuteStr] = timeString.split(":");
+  let hour = Number(hourStr);
+  const minute = minuteStr || "00";
+
+  const period = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${period}`;
+}
+
+function formatTimeRange(startTime, endTime) {
+  return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+}
 </script>
 
 </body>

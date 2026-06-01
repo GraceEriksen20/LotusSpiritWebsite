@@ -118,34 +118,86 @@ async function handleClassBooking(session) {
     throw bookingError;
   }
 
-  if (customerEmail) {
-    await resend.emails.send({
-      from: "Lotus Spirit Studio <bookings@lotusspiritstudio.online>",
-      to: customerEmail,
-      subject: "Your Lotus Spirit Studio class is confirmed",
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2a2a2a;">
-          <h2 style="color: #4d0012;">Your class is confirmed!</h2>
 
-          <p>Hi ${customerName},</p>
+ function formatTime(timeString) {
+  if (!timeString) return "";
 
-          <p>Thank you for booking with Lotus Spirit Studio. Your payment was completed successfully.</p>
+  let [hour, minute] = timeString.split(":");
+  hour = parseInt(hour, 10);
 
-          <h3>Class Details</h3>
-          <p>
-            <strong>Class:</strong> ${classData.title}<br>
-            <strong>Date:</strong> ${classData.class_date}<br>
-            <strong>Time:</strong> ${classData.start_time} - ${classData.end_time}<br>
-            <strong>Location:</strong> Southwest Nimbus Avenue
+  const period = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${period}`;
+}
+
+if (customerEmail) {
+  await resend.emails.send({
+    from: "Lotus Spirit Studio Bookings <bookings@lotusspiritstudio.online>",
+    to: customerEmail,
+    subject: "Your Lotus Spirit Studio class is confirmed",
+    html: `
+      <div style="margin:0; padding:0; background-color:#f6f2ee; font-family:Arial, sans-serif; color:#2a2a2a;">
+        <div style="max-width:640px; margin:0 auto; padding:32px 16px;">
+
+          <div style="background-color:#4d0012; padding:28px 24px; text-align:center; border-radius:18px 18px 0 0;">
+            <img
+              src="https://lotusspiritstudio.online/Lotus%20Spirit_Logo_2.3.png"
+              alt="Lotus Spirit Studio"
+              width="180"
+              style="display:block; margin:0 auto;"
+            >
+          </div>
+
+          <div style="background-color:#ffffff; padding:32px 28px; border-radius:0 0 18px 18px; border:1px solid #eadfd8;">
+            <h1 style="margin:0 0 12px; color:#4d0012; font-size:26px; font-weight:600;">
+              Your class is confirmed
+            </h1>
+
+            <p style="font-size:16px; line-height:1.6; margin:0 0 18px;">
+              Hello ${customerName || "there"},
+            </p>
+
+            <p style="font-size:16px; line-height:1.6; margin:0 0 24px;">
+              Thank you for booking with Lotus Spirit Studio. Your spot has been reserved, and we’re excited to practice with you soon.
+            </p>
+
+            <div style="background-color:#f6f2ee; border:1px solid #eadfd8; border-radius:14px; padding:22px; margin:24px 0;">
+              <h2 style="margin:0 0 16px; color:#4d0012; font-size:20px;">
+                Class Details
+              </h2>
+
+              <p style="margin:0; font-size:15px; line-height:1.8;">
+                <strong>Class:</strong> ${classData.title || "Yoga Class"}<br>
+                <strong>Date:</strong> ${classData.class_date}<br>
+                <strong>Time:</strong> ${formatTime(classData.start_time)} - ${formatTime(classData.end_time)}<br>
+                <strong>Teacher:</strong> Jessica Eriksen<br>
+                <strong>Location:</strong> 8116 SW Nimbus Ave #4d, Beaverton, OR, USA<br>
+                <strong>Price:</strong> $16
+              </p>
+            </div>
+
+            <p style="font-size:15px; line-height:1.6; margin:0 0 20px;">
+              Please arrive a few minutes early so you have time to settle in before class begins.
+            </p>
+
+            <p style="font-size:15px; line-height:1.6; margin:0;">
+              With gratitude,<br>
+              <strong style="color:#4d0012;">Lotus Spirit Studio</strong>
+            </p>
+          </div>
+
+          <p style="text-align:center; color:#6d5b5d; font-size:12px; margin:18px 0 0;">
+            Lotus Spirit Studio • Beaverton, Oregon
           </p>
 
-          <p>We’re excited to practice with you soon.</p>
-
-          <p style="margin-top: 24px;">Lotus Spirit Studio</p>
         </div>
-      `,
-    });
-  }
+      </div>
+    `,
+  });
+}
 }
 
 async function handleVideoSubscription(session) {

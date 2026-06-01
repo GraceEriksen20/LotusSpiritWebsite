@@ -49,8 +49,23 @@
       location: "Southwest Nimbus Avenue",
       price: `$${(data.price_cents / 100).toFixed(2)}`,
       priceCents: data.price_cents,
-      duration: `${data.start_time} - ${data.end_time}`
+      duration: `${formatTime(data.start_time)} - ${formatTime(data.end_time)}`
     };
+
+    function formatTime(timeString) {
+  if (!timeString) return "";
+
+  let [hour, minute] = timeString.split(":");
+
+  hour = parseInt(hour, 10);
+
+  const period = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute} ${period}`;
+}
 
     document.getElementById("sumService").textContent = booking.service;
     document.getElementById("sumDateTime").textContent =
