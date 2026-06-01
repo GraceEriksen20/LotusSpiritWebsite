@@ -179,6 +179,26 @@ if (customerEmail) {
               </p>
             </div>
 
+            <p style="text-align:center; margin:24px 0 12px;">
+  Need to cancel? Manage your booking below.
+</p>
+
+<div style="text-align:center; margin-bottom:24px;">
+  <a
+    href="https://lotusspiritstudio.online/bookings.html"
+    style="
+      display:inline-block;
+      background-color:#4d0012;
+      color:#ffffff;
+      text-decoration:none;
+      padding:14px 28px;
+      border-radius:8px;
+      font-weight:600;
+    ">
+    Manage My Bookings
+  </a>
+</div>
+
             <p style="font-size:15px; line-height:1.6; margin:0 0 20px;">
               Please arrive a few minutes early so you have time to settle in before class begins.
             </p>

@@ -148,17 +148,18 @@ const user = Auth.getUser();
 
 async function loadBookings() {
 
-  const { data, error } = await supabaseClient
-    .from("bookings")
-    .select(`
-      *,
-      classes (
-        title,
-        class_date,
-        start_time,
-        end_time
-      )
-    `)
+ const { data, error } = await supabaseClient
+  .from("bookings")
+  .select(`
+    id,
+    status,
+    classes (
+      title,
+      class_date,
+      start_time,
+      end_time
+    )
+  `)
     .eq("customer_email", user.email)
     .order("created_at", {
       ascending: false
@@ -207,21 +208,28 @@ async function loadBookings() {
   const upcoming = [];
   const past = [];
 
-  data.forEach(booking => {
+data.forEach(booking => {
 
-    const classDate = new Date(
-  `${booking.classes?.class_date} ${booking.classes?.start_time}`
-);
-    if (classDate >= today) {
-      upcoming.push(booking);
-    } else {
-      past.push(booking);
-    }
-  });
+  console.log("booking status:", booking.status, booking.id);
+
+  if (booking.status === "cancelled") {
+    return;
+  }
+
+  const classDate = new Date(
+    `${booking.classes?.class_date} ${booking.classes?.start_time}`
+  );
+
+  if (classDate >= today) {
+    upcoming.push(booking);
+  } else {
+    past.push(booking);
+  }
+});
 
   upcomingContainer.innerHTML =
-    upcoming.length > 0
-      ? upcoming.map(renderBooking).join("")
+  upcoming.length > 0
+    ? upcoming.map(booking => renderBooking(booking, true)).join("")
       : `
         <div class="muted">
           No upcoming bookings.
@@ -229,8 +237,8 @@ async function loadBookings() {
       `;
 
   pastContainer.innerHTML =
-    past.length > 0
-      ? past.map(renderBooking).join("")
+  past.length > 0
+    ? past.map(booking => renderBooking(booking, false)).join("")
       : `
         <div class="muted">
           No past classes.
@@ -253,7 +261,8 @@ function formatTime(timeString) {
   return `${hour}:${minute} ${period}`;
 }
 
-function renderBooking(booking) {
+function renderBooking(booking, showCancel = false) {
+  console.log("Rendering booking:", booking);
 
   return `
     <div class="booking-card">
@@ -266,14 +275,55 @@ function renderBooking(booking) {
         ${booking.classes?.class_date || ""}
       </div>
 
-      <div class="muted">
-  ${formatTime(booking.classes?.start_time)}
-  -
-  ${formatTime(booking.classes?.end_time)}
-</div>
+      <div class="muted mb-3">
+        ${formatTime(booking.classes?.start_time)}
+        -
+        ${formatTime(booking.classes?.end_time)}
+      </div>
+
+      ${showCancel ? `
+  <button
+    class="btn btn-outline-danger btn-sm"
+    onclick="cancelBooking('${booking.id}')">
+    Cancel Booking
+  </button>
+` : ""}
 
     </div>
   `;
+}
+
+async function cancelBooking(bookingId) {
+
+  const confirmed = confirm(
+    "Are you sure you want to cancel this booking?"
+  );
+
+  if (!confirmed) return;
+
+  console.log("Cancelling booking ID:", bookingId);
+
+  const { data, error } = await supabaseClient
+    .from("bookings")
+    .update({ status: "cancelled" })
+    .eq("id", bookingId)
+    .select();
+
+  console.log("Updated booking:", data);
+  console.log("Cancel error:", error);
+
+  if (error) {
+    alert("Unable to cancel booking.");
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    alert("No booking was updated. Check the booking ID or Supabase permissions.");
+    return;
+  }
+
+  alert("Booking cancelled.");
+  location.reload();
 }
 
 loadBookings();
